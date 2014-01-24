@@ -4,7 +4,6 @@ import (
 	"fmt"
 	"os"
 	"log"
-	"bytes"
 )
 
 const SPIDEV = "/dev/spidev"
@@ -53,14 +52,14 @@ func (spi *SPIDevice) close_fd(){
 // Sends bytes over SPI channel and returns []byte response
 func (spi *SPIDevice) Send(bytes_to_send []byte) []byte{
 	//sends command
-	count, err := spi.fd.Write(bytes)
+	count, err := spi.fd.Write(bytes_to_send)
 	if err != nil {
 		log.Fatalf("Error sending bytes", err)
 	}
 	fmt.Printf("sent %d bytes: %q\n", count, bytes_to_send)
 
 	data := make([]byte, 100)
-	ncount, err = spi.fd.Read(data)
+	count, err = spi.fd.Read(data)
 	if err != nil {
 		log.Fatal(err)
 	}
@@ -70,7 +69,7 @@ func (spi *SPIDevice) Send(bytes_to_send []byte) []byte{
 
 func main(){
 	log.Println("SPI")
-	device := NewSPIDevice(DEFAULT_BUS, DEFAULT_CHIP, nil)
+	device := NewSPIDevice(DEFAULT_BUS, DEFAULT_CHIP)
 	log.Println("spi open")
 	device.close_fd()
 	log.Println("spi close")
