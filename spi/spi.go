@@ -9,6 +9,10 @@ import (
 
 const SPIDEV = "/dev/spidev"
 const SPI_HELP_LINK = "http://piface.github.io/pifacecommon/installation.html#enable-the-spi-module"
+const SPI_DELAY = 0
+const SPI_SPEED = 10000000
+const SPI_BPW = 8
+const SPI_MODE = 0
 
 type SPIDevice struct{
 	Bus int // 0
@@ -51,7 +55,7 @@ func (spi *SPIDevice) Close() error{
 }
 
 // Sends bytes over SPI channel and returns []byte response
-func (spi *SPIDevice) Send(bytes_to_send []byte) []byte{
+func (spi *SPIDevice) Send(bytes_to_send []byte) byte{
 	wBuffer := bytes_to_send
 	var rBuffer []byte
 	rBuffer = make([]byte,len(bytes_to_send))
@@ -60,6 +64,9 @@ func (spi *SPIDevice) Send(bytes_to_send []byte) []byte{
 	transfer.txBuf = uint64( uintptr( unsafe.Pointer(&wBuffer)))
 	transfer.rxBuf = uint64( uintptr( unsafe.Pointer(&rBuffer)))
 	transfer.length = uint32(len(bytes_to_send))
+	transfer.delayUsecs = SPI_DELAY
+	transfer.bitsPerWord = SPI_BPW
+	transfer.speedHz = SPI_SPEED
 
 	fmt.Printf("sent %d bytes: %q\n", len(bytes_to_send), wBuffer)
 	_,_,ep := syscall.Syscall(syscall.SYS_IOCTL, spi.fd.Fd(), SpiIOcMessage(1), uintptr(unsafe.Pointer(&transfer)))
@@ -69,7 +76,7 @@ func (spi *SPIDevice) Send(bytes_to_send []byte) []byte{
 		fmt.Println("Syscall successfull")
 	}
 	fmt.Printf("read %d bytes:\n", len(rBuffer))
-	return rBuffer
+	return rBuffer[2]
 }
 
 type SpiIOcTransfer struct{
