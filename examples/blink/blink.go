@@ -13,6 +13,7 @@ func main(){
 	err := pfd.InitBoard()
 	if err != nil {
 		fmt.Printf("Error on init board: %s", err)
+		return
 	}
 
 	for{
