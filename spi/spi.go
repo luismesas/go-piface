@@ -66,10 +66,11 @@ func (spi *SPIDevice) Close() error{
 func (spi *SPIDevice) Send(bytes_to_send []byte) []byte{
 	n, err := spi.fd.Write(bytes_to_send)
 	if err != nil {
-		fmt.Printf("Error writting: %s", err)
+		fmt.Printf("Error writting: %s\n", err)
 	} else {
-		fmt.Printf("Sent %d bytes: %q", n, bytes_to_send)
+		fmt.Printf("Sent %d bytes: %q\n", n, bytes_to_send)
 	}
+	time.Sleep(time.Second)
 
 	return make([]byte, len(bytes_to_send))
 	/*
