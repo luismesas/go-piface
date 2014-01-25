@@ -102,7 +102,6 @@ func (mcp *MCP23S17) Close() error{
 // :param read_write_cmd: Read or write command.
 // :type read_write_cmd: int	
 func (mcp *MCP23S17) getSPIControlByte(read_write_cmd byte) byte {
-    // board_addr_pattern = (self.hardware_addr & 0b111) << 1
 	board_addr_pattern := (mcp.HardwareAddress << 0x01) & 0xE
 	rw_cmd_pattern := read_write_cmd & 0x01  // make sure it's just 1 bit long
 	return 0x40 | board_addr_pattern | rw_cmd_pattern

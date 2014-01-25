@@ -38,7 +38,7 @@ func NewSPIDevice(bus int, chipSelect int) *SPIDevice{
 func (spi *SPIDevice) Open(spi_device string) error{
 	var err error
 	// spi.fd, err = os.OpenFile(spi_device, os.O_RDWR|os.O_SYNC, 0)
-	spi.fd, err = os.OpenFile(spi_device, os.O_RDWR, 0)
+	spi.fd, err = os.Create(spi_device)
 	if err != nil {
 		return fmt.Errorf("I can't see %s. Have you enabled the SPI module? (%s)", spi_device, SPI_HELP_LINK)
 	}
