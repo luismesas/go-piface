@@ -1,4 +1,4 @@
-package main
+package spi
 
 import (
 	"fmt"
@@ -8,9 +8,6 @@ import (
 
 const SPIDEV = "/dev/spidev"
 const SPI_HELP_LINK = "http://piface.github.io/pifacecommon/installation.html#enable-the-spi-module"
-
-const DEFAULT_BUS = 0
-const DEFAULT_CHIP = 0
 
 type SPIDevice struct{
 	bus int // 0
@@ -27,13 +24,13 @@ func NewSPIDevice(bus int, chip_select int) *SPIDevice{
 	spi.fd = nil
 
 	spi_device := fmt.Sprintf("%s%d.%d", SPIDEV, spi.bus, spi.chip_select)
-	spi.open_fd(spi_device)
+	spi.Open(spi_device)
 
 	return spi
 }
 
 // Opens SPI device
-func (spi *SPIDevice) open_fd(spi_device string){
+func (spi *SPIDevice) Open(spi_device string){
 	var err error
 	spi.fd, err = os.OpenFile(spi_device, os.O_RDWR|os.O_SYNC, 0)
 	if err != nil {
@@ -42,7 +39,7 @@ func (spi *SPIDevice) open_fd(spi_device string){
 }
 
 // Closes SPI device
-func (spi *SPIDevice) close_fd(){
+func (spi *SPIDevice) Close(){
 	err := spi.fd.Close()
 	if err != nil {
 		log.Fatalf("Error closing spi", err)
@@ -65,12 +62,4 @@ func (spi *SPIDevice) Send(bytes_to_send []byte) []byte{
 	}
 	fmt.Printf("read %d bytes: %q\n", count, data[:count])
 	return data
-}
-
-func main(){
-	log.Println("SPI")
-	device := NewSPIDevice(DEFAULT_BUS, DEFAULT_CHIP)
-	log.Println("spi open")
-	device.close_fd()
-	log.Println("spi close")
 }
