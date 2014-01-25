@@ -4,7 +4,8 @@ import (
 	"fmt"
 	"os"
 	"unsafe"
-	"syscall"
+	// "syscall"
+	"time"
 )
 
 const SPIDEV = "/dev/spidev"
@@ -37,6 +38,18 @@ func (spi *SPIDevice) Open(spi_device string) error{
 	if err != nil {
 		return fmt.Errorf("I can't see %s. Have you enabled the SPI module? (%s)", spi_device, SPI_HELP_LINK)
 	}
+
+	//watchs for spi messages
+	go func(){
+		for{
+			r := make([]byte,1)
+			spi.fd.Read(r)
+			if r[0] != 0 {
+				fmt.Printf("%q",r[0])
+			}
+			time.Sleep(time.Millisecond)			
+		}
+	}()
 	return nil
 }
 
@@ -51,13 +64,21 @@ func (spi *SPIDevice) Close() error{
 
 // Sends bytes over SPI channel and returns []byte response
 func (spi *SPIDevice) Send(bytes_to_send []byte) []byte{
+	n, err := spi.fd.Write(bytes_to_send)
+	if err != nil {
+		fmt.Printf("Error writting: %s", err)
+	} else {
+		fmt.Printf("Sent %d bytes: %q", n, bytes_to_send)
+	}
 
+	return make([]byte, len(bytes_to_send))
+	/*
 	wBuffer := bytes_to_send
 	rBuffer := make([]byte, len(bytes_to_send))
 
 	transfer := SpiIOcTransfer{}
-	transfer.txBuf = uintptr(unsafe.Pointer(&wBuffer))
-	transfer.rxBuf = uintptr(unsafe.Pointer(&rBuffer))
+	transfer.txBuf = uint64( uintptr( unsafe.Pointer(&wBuffer)))
+	transfer.rxBuf = uint64( uintptr( unsafe.Pointer(&rBuffer)))
 	transfer.length = uint32(len(bytes_to_send))
 
 	fmt.Printf("sent %d bytes: %q\n", len(bytes_to_send), wBuffer)
@@ -67,11 +88,12 @@ func (spi *SPIDevice) Send(bytes_to_send []byte) []byte{
 	}
 	fmt.Printf("read %d bytes: %q\n", len(bytes_to_send), rBuffer)
 	return rBuffer
+	*/
 }
 
 type SpiIOcTransfer struct{
-	txBuf uintptr
-	rxBuf uintptr
+	txBuf uint64
+	rxBuf uint64
 	length uint32
 	speedHz uint32
 	delayUsecs uint16
