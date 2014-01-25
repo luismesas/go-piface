@@ -53,7 +53,7 @@ func (spi *SPIDevice) Close() error{
 
 // Sends bytes over SPI channel and returns []byte response
 func (spi *SPIDevice) Send(bytes_to_send []byte) []byte{
-	wBuffer := make([]byte, len(bytes_to_send))
+	wBuffer := bytes_to_send
 	rBuffer := strings.Repeat(" ", len(bytes_to_send))
 
 	transfer := SpiIOcTransfer{}
