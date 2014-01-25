@@ -67,7 +67,7 @@ func (spi *SPIDevice) Send(bytes_to_send []byte) []byte{
 	} else {
 		fmt.Println("Syscall successfull")
 	}
-	// fmt.Printf("read %d bytes: %q\n", len(bytes_to_send), rBuffer)
+	fmt.Printf("read %d bytes: %q\n", len(rBuffer), rBuffer)
 	return rBuffer
 }
 
