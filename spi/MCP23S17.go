@@ -92,9 +92,9 @@ const (
 )
 
 func (mcp *MCP23S17) Open() error{
-	fmt.Printl("MCP23S17 Open")
+	fmt.Println("MCP23S17 Open")
 
-	err = mcp.Device.SetMode(MCP23S17_MODE)
+	err := mcp.Device.SetMode(MCP23S17_MODE)
 	if err != nil {
 		return err
 	}
