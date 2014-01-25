@@ -100,8 +100,8 @@ const (
 )
 
 func SpiIOcMessage(n uintptr) uintptr{
-	var b byte
-	return IOW(SPI_IOC_MAGIC, 0, unsafe.Sizeof(b) * SpiMessageSize(n))
+	size := make([]byte,SpiMessageSize(n))
+	return IOW(SPI_IOC_MAGIC, 0, uintptr(unsafe.Pointer(&size)))
 }
 
 func SpiMessageSize(n uintptr) uintptr{
