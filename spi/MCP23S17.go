@@ -111,7 +111,7 @@ func (mcp *MCP23S17) getSPIControlByte(read_write_cmd byte) byte {
 // Returns the value of the address specified.
 func (mcp *MCP23S17) Read(address byte) byte{
 	ctrl_byte := mcp.getSPIControlByte(READ_CMD)
-	return mcp.Device.Send([]byte{ctrl_byte, address, 0})
+	return mcp.Device.Send([]byte{ctrl_byte, address, 0})[2]
 }
 
 // Writes data to the address specified.
