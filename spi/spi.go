@@ -64,6 +64,8 @@ func (spi *SPIDevice) Send(bytes_to_send []byte) []byte{
 	_,_,ep := syscall.Syscall(syscall.SYS_IOCTL, spi.fd.Fd(), SpiIOcMessage(1), uintptr(unsafe.Pointer(&transfer)))
 	if ep != 0 {
 		fmt.Printf("Error on syscall: %s\n", syscall.Errno(ep))
+	} else {
+		fmt.Println("Syscall successfull")
 	}
 	fmt.Printf("read %d bytes: %q\n", len(bytes_to_send), rBuffer)
 	return rBuffer
@@ -100,7 +102,7 @@ const (
 )
 
 func SpiIOcMessage(n uintptr) uintptr{
-	return IOC(IOC_WRITE, SPI_IOC_MAGIC, 0, uintptr(SpiMessageSize(size)))
+	return IOC(IOC_WRITE, SPI_IOC_MAGIC, 0, uintptr(SpiMessageSize(n)))
 }
 
 func SpiMessageSize(n uintptr) uintptr{
