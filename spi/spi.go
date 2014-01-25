@@ -3,7 +3,8 @@ package spi
 import (
 	"fmt"
 	"os"
-	"log"
+	"unsafe"
+	"syscall"
 )
 
 const SPIDEV = "/dev/spidev"
@@ -50,6 +51,22 @@ func (spi *SPIDevice) Close() error{
 
 // Sends bytes over SPI channel and returns []byte response
 func (spi *SPIDevice) Send(bytes_to_send []byte) []byte{
+
+	wBuffer := bytes_to_send
+	rBuffer := make([]byte, len(bytes_to_send))
+
+	transfer := SpiIOcTransfer{}
+	transfer.txBuf = uintptr(unsafe.Pointer(&wBuffer))
+	transfer.rxBuf = uintptr(unsafe.Pointer(&rBuffer))
+	transfer.length = uint32(len(bytes_to_send))
+
+	msg := SpiIOcMessage(1)
+
+	fmt.Printf("sent %d bytes: %q\n", len(bytes_to_send), wBuffer)
+	syscall.Syscall(syscall.SYS_IOCTL, spi.fd.Fd(), uintptr(unsafe.Pointer(&msg)), uintptr(unsafe.Pointer(&transfer)))
+	fmt.Printf("read %d bytes: %q\n", len(bytes_to_send), rBuffer)
+	return rBuffer
+	/*
 	//sends command
 	count, err := spi.fd.Write(bytes_to_send)
 	if err != nil {
@@ -69,4 +86,56 @@ func (spi *SPIDevice) Send(bytes_to_send []byte) []byte{
 	}
 	fmt.Printf("read %d bytes: %q\n", count, data[:count])
 	return data
+	*/
+}
+
+type SpiIOcTransfer struct{
+	txBuf uintptr
+	rxBuf uintptr
+	length uint32
+	speedHz uint32
+	delayUsecs uint16
+	bitsPerWord uint8
+	csChange uint8
+	pad uint32
+}
+
+const SPI_IOC_MAGIC = 107
+
+const (
+	IOC_NONE = 0
+	IOC_WRITE = 1
+	IOC_READ = 2
+
+	IOC_NRBITS = 8
+	IOC_TYPEBITS = 8
+
+	IOC_SIZEBITS = 14
+	IOC_DIRBITS = 2
+
+	IOC_NRSHIFT = 0
+	IOC_TYPESHIFT = IOC_NRSHIFT + IOC_NRBITS
+	IOC_SIZESHIFT = IOC_TYPESHIFT + IOC_TYPEBITS
+	IOC_DIRSHIFT = IOC_SIZESHIFT + IOC_SIZEBITS
+)
+
+func SpiIOcMessage(n uintptr) uintptr{
+	var b byte
+	return IOW(SPI_IOC_MAGIC, 0, unsafe.Sizeof(b) * SpiMessageSize(n))
+}
+
+func SpiMessageSize(n uintptr) uintptr{
+	if (n * unsafe.Sizeof(SpiIOcTransfer{})) < (1 << IOC_SIZEBITS) {
+		return (n * unsafe.Sizeof(SpiIOcTransfer{}))
+	} else {
+		return 0
+	}
+}
+
+func IOW(t, nr, size uintptr) uintptr{
+	return IOC(IOC_WRITE, t, nr, unsafe.Sizeof(size))
+}
+
+func IOC(dir, t, nr, size uintptr) uintptr{
+	return (dir << IOC_DIRSHIFT) | (t << IOC_TYPESHIFT) | (nr << IOC_NRSHIFT) | (size << IOC_SIZESHIFT)
 }
