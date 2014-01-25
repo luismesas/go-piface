@@ -79,8 +79,34 @@ func NewMCP23S17(hardwareAddress byte, bus int, chip_select int) *MCP23S17{
 	return mcp
 }
 
+const (
+	MCP23S17_MODE = 0
+	MCP23S17_BPW = 8
+	MCP23S17_SPEED = 10000000
+)
+
 func (mcp *MCP23S17) Open(spi_device string) error{
-	return mcp.Device.Open(spi_device)
+	err := mcp.Device.Open(spi_device)
+	if err != nil {
+		return err
+	}
+
+	err = mcp.Device.SetMode(MCP23S17_MODE)
+	if err != nil {
+		return err
+	}
+
+	err = mcp.Device.SetBitsPerWord(MCP23S17_BPW)
+	if err != nil {
+		return err
+	}
+
+	err = mcp.Device.SetSpeed(MCP23S17_SPEED)
+	if err != nil {
+		return err
+	}
+
+	return nil
 }
 
 func (mcp *MCP23S17) Close() error{
