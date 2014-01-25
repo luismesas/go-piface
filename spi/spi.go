@@ -10,40 +10,42 @@ const SPIDEV = "/dev/spidev"
 const SPI_HELP_LINK = "http://piface.github.io/pifacecommon/installation.html#enable-the-spi-module"
 
 type SPIDevice struct{
-	bus int // 0
-	chip_select int // 0
+	Bus int // 0
+	Chip int // 0
 	fd  *os.File // nil 
 	spi_device string
 }
 
 // An SPI Device at /dev/spi<bus>.<chip_select>.
-func NewSPIDevice(bus int, chip_select int) *SPIDevice{
+func NewSPIDevice(bus int, chipSelect int) *SPIDevice{
 	spi := new(SPIDevice)
-	spi.bus = bus
-	spi.chip_select = chip_select
+	spi.Bus = bus
+	spi.Chip = chipSelect
 	spi.fd = nil
 
-	spi_device := fmt.Sprintf("%s%d.%d", SPIDEV, spi.bus, spi.chip_select)
-	spi.Open(spi_device)
+	spiDevice := fmt.Sprintf("%s%d.%d", SPIDEV, spi.Bus, spi.Chip)
+	spi.Open(spiDevice)
 
 	return spi
 }
 
 // Opens SPI device
-func (spi *SPIDevice) Open(spi_device string){
+func (spi *SPIDevice) Open(spi_device string) error{
 	var err error
 	spi.fd, err = os.OpenFile(spi_device, os.O_RDWR|os.O_SYNC, 0)
 	if err != nil {
-		log.Fatalf("I can't see %s. Have you enabled the SPI module? (%s)", spi_device, SPI_HELP_LINK)
+		return fmt.Errorf("I can't see %s. Have you enabled the SPI module? (%s)", spi_device, SPI_HELP_LINK)
 	}
+	return nil
 }
 
 // Closes SPI device
-func (spi *SPIDevice) Close(){
+func (spi *SPIDevice) Close() error{
 	err := spi.fd.Close()
 	if err != nil {
-		log.Fatalf("Error closing spi", err)
+		return fmt.Errorf("Error closing spi", err)
 	}
+	return nil
 }
 
 // Sends bytes over SPI channel and returns []byte response

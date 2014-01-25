@@ -30,7 +30,25 @@ const (
 	GPIOB = 0x13  // port B
 	OLATA = 0x14  // output latch A
 	OLATB = 0x15  // output latch B
-) 
+)
+
+// I/O config
+const (
+	BANK_OFF = 0x00  // addressing mode
+	BANK_ON = 0x80
+	INT_MIRROR_ON = 0x40  // interupt mirror (INTa|INTb)
+	INT_MIRROR_OFF = 0x00
+	SEQOP_OFF = 0x20  // incrementing address pointer
+	SEQOP_ON = 0x00
+	DISSLW_ON = 0x10  // slew rate
+	DISSLW_OFF = 0x00
+	HAEN_ON = 0x08  // hardware addressing
+	HAEN_OFF = 0x00
+	ODR_ON = 0x04  // open drain for interupts
+	ODR_OFF = 0x00
+	INTPOL_HIGH = 0x02  // interupt polarity
+	INTPOL_LOW = 0x00
+)
 
 const (
 	WRITE_CMD = 0

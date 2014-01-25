@@ -2,89 +2,89 @@ package spi
 
 //	Microchip's MCP23S17: A 16-Bit I/O Expander with Serial Interface.
 type MCP23S17 struct{
-	device *SPIDevice
-	hardware_addr byte
+	Device *SPIDevice
+	HardwareAddress byte
 	
 	// Controls the direction of the data I/O.
-	iodira *MCP23S17Register
-	iodirb *MCP23S17Register
+	IODIRa *MCP23S17Register
+	IODIRb *MCP23S17Register
 
 	// This register allows the user to configure the polarity on the corresponding GPIO port bits.
-	ipola *MCP23S17Register
-	ipolb *MCP23S17Register
+	IPOLa *MCP23S17Register
+	IPOLb *MCP23S17Register
 
 	// The GPINTEN register controls the interrupt-onchange feature for each pin.
-	gpintena *MCP23S17Register
-	gpintenb *MCP23S17Register
+	GPINTENa *MCP23S17Register
+	GPINTENb *MCP23S17Register
 
 	// The default comparison value is configured in the DEFVAL register.
-	defvala *MCP23S17Register
-	defvalb *MCP23S17Register
+	DEFVALa *MCP23S17Register
+	DEFVALb *MCP23S17Register
 
 	// The INTCON register controls how the associated pin value is compared for the interrupt-on-change feature.
-	intcona *MCP23S17Register
-	intconb *MCP23S17Register
+	INTCONa *MCP23S17Register
+	INTCONb *MCP23S17Register
 
 	// The IOCON register contains several bits for configuring the device.
-	iocon *MCP23S17Register
+	IOCON *MCP23S17Register
 
 	// The GPPU register controls the pull-up esistors for the port pins.
-	gppua *MCP23S17Register
-	gppub *MCP23S17Register
+	GPPUa *MCP23S17Register
+	GPPUb *MCP23S17Register
 
 	// The INTF register reflects the interrupt condition on the port pins of any pin that is enabled for interrupts via the GPINTEN register.
-	intfa *MCP23S17Register
-	intfb *MCP23S17Register
+	INTFa *MCP23S17Register
+	INTFb *MCP23S17Register
 
 	// The INTCAP register captures the GPIO port value at the time the interrupt occurred.
-	intcapa *MCP23S17Register
-	intcapb *MCP23S17Register
+	INTCAPa *MCP23S17Register
+	INTCAPb *MCP23S17Register
 
 	// The GPIO register reflects the value on the port.
-	gpioa *MCP23S17Register
-	gpiob *MCP23S17Register
+	GPIOa *MCP23S17Register
+	GPIOb *MCP23S17Register
 
 	// The OLAT register provides access to the output latches.
-	olata *MCP23S17Register
-	olatb *MCP23S17Register
+	OLATa *MCP23S17Register
+	OLATb *MCP23S17Register
 }
 
-func NewMCP23S17(hardware_addr byte, bus int, chip_select int) *MCP23S17{
+func NewMCP23S17(hardwareAddress byte, bus int, chip_select int) *MCP23S17{
 	mcp := new(MCP23S17)
-	mcp.device = NewSPIDevice(bus, chip_select)
-	mcp.hardware_addr = hardware_addr
+	mcp.Device = NewSPIDevice(bus, chip_select)
+	mcp.HardwareAddress = hardwareAddress
 
-   	mcp.iodira = NewMCP23S17Register(IODIRA, mcp)
-   	mcp.iodirb = NewMCP23S17Register(IODIRB, mcp)
-   	mcp.ipola = NewMCP23S17Register(IPOLA, mcp)
-   	mcp.ipolb = NewMCP23S17Register(IPOLB, mcp)
-   	mcp.gpintena = NewMCP23S17Register(GPINTENA, mcp)
-   	mcp.gpintenb = NewMCP23S17Register(GPINTENB, mcp)
-   	mcp.defvala = NewMCP23S17Register(DEFVALA, mcp)
-   	mcp.defvalb = NewMCP23S17Register(DEFVALB, mcp)
-   	mcp.intcona = NewMCP23S17Register(INTCONA, mcp)
-   	mcp.intconb = NewMCP23S17Register(INTCONB, mcp)
-   	mcp.iocon = NewMCP23S17Register(IOCON, mcp)
-   	mcp.gppua = NewMCP23S17Register(GPPUA, mcp)
-   	mcp.gppub = NewMCP23S17Register(GPPUB, mcp)
-   	mcp.intfa = NewMCP23S17Register(INTFA, mcp)
-   	mcp.intfb = NewMCP23S17Register(INTFB, mcp)
-   	mcp.intcapa = NewMCP23S17Register(INTCAPA, mcp)
-   	mcp.intcapb = NewMCP23S17Register(INTCAPB, mcp)
-   	mcp.gpioa = NewMCP23S17Register(GPIOA, mcp)
-   	mcp.gpiob = NewMCP23S17Register(GPIOB, mcp)
-   	mcp.olata = NewMCP23S17Register(OLATA, mcp)
-   	mcp.olatb = NewMCP23S17Register(OLATB, mcp)
+   	mcp.IODIRa = NewMCP23S17Register(IODIRA, mcp)
+   	mcp.IODIRb = NewMCP23S17Register(IODIRB, mcp)
+   	mcp.IPOLa = NewMCP23S17Register(IPOLA, mcp)
+   	mcp.IPOLb = NewMCP23S17Register(IPOLB, mcp)
+   	mcp.GPINTENa = NewMCP23S17Register(GPINTENA, mcp)
+   	mcp.GPINTENb = NewMCP23S17Register(GPINTENB, mcp)
+   	mcp.DEFVALa = NewMCP23S17Register(DEFVALA, mcp)
+   	mcp.DEFVALb = NewMCP23S17Register(DEFVALB, mcp)
+   	mcp.INTCONa = NewMCP23S17Register(INTCONA, mcp)
+   	mcp.INTCONb = NewMCP23S17Register(INTCONB, mcp)
+   	mcp.IOCON = NewMCP23S17Register(IOCON, mcp)
+   	mcp.GPPUa = NewMCP23S17Register(GPPUA, mcp)
+   	mcp.GPPUb = NewMCP23S17Register(GPPUB, mcp)
+   	mcp.INTFa = NewMCP23S17Register(INTFA, mcp)
+   	mcp.INTFb = NewMCP23S17Register(INTFB, mcp)
+   	mcp.INTCAPa = NewMCP23S17Register(INTCAPA, mcp)
+   	mcp.INTCAPb = NewMCP23S17Register(INTCAPB, mcp)
+   	mcp.GPIOa = NewMCP23S17Register(GPIOA, mcp)
+   	mcp.GPIOb = NewMCP23S17Register(GPIOB, mcp)
+   	mcp.OLATa = NewMCP23S17Register(OLATA, mcp)
+   	mcp.OLATb = NewMCP23S17Register(OLATB, mcp)
 
 	return mcp
 }
 
-func (mcp *MCP23S17) Open(spi_device string) {
-	mcp.device.Open(spi_device)
+func (mcp *MCP23S17) Open(spi_device string) error{
+	return mcp.Device.Open(spi_device)
 }
 
-func (mcp *MCP23S17) Close(){
-	mcp.device.Close()
+func (mcp *MCP23S17) Close() error{
+	return mcp.Device.Close()
 }
 
 
@@ -103,7 +103,7 @@ func (mcp *MCP23S17) Close(){
 // :type read_write_cmd: int	
 func (mcp *MCP23S17) getSPIControlByte(read_write_cmd byte) byte {
     // board_addr_pattern = (self.hardware_addr & 0b111) << 1
-	board_addr_pattern := (mcp.hardware_addr << 0x01) & 0xE
+	board_addr_pattern := (mcp.HardwareAddress << 0x01) & 0xE
 	rw_cmd_pattern := read_write_cmd & 0x01  // make sure it's just 1 bit long
 	return 0x40 | board_addr_pattern | rw_cmd_pattern
 }
@@ -111,13 +111,13 @@ func (mcp *MCP23S17) getSPIControlByte(read_write_cmd byte) byte {
 // Returns the value of the address specified.
 func (mcp *MCP23S17) Read(address byte) byte{
 	ctrl_byte := mcp.getSPIControlByte(READ_CMD)
-	return mcp.device.Send([]byte{ctrl_byte, address, 0})[0]
+	return mcp.Device.Send([]byte{ctrl_byte, address, 0})[0]
 }
 
 // Writes data to the address specified.
 func (mcp *MCP23S17) Write(data byte, address byte){
 	ctrl_byte := mcp.getSPIControlByte(WRITE_CMD)
-	mcp.device.Send([]byte{ctrl_byte, address, data})
+	mcp.Device.Send([]byte{ctrl_byte, address, data})
 }
 
 // Returns the bit specified from the address.
