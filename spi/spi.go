@@ -5,6 +5,7 @@ import (
 	"os"
 	"unsafe"
 	"syscall"
+	"strings"
 )
 
 const SPIDEV = "/dev/spidev"
@@ -53,7 +54,7 @@ func (spi *SPIDevice) Close() error{
 // Sends bytes over SPI channel and returns []byte response
 func (spi *SPIDevice) Send(bytes_to_send []byte) []byte{
 	wBuffer := make([]byte, len(bytes_to_send))
-	rBuffer := make([]byte, len(bytes_to_send))
+	rBuffer := strings.Repeat(" ", len(bytes_to_send))
 
 	transfer := SpiIOcTransfer{}
 	transfer.txBuf = uint64( uintptr( unsafe.Pointer(&wBuffer)))
@@ -68,7 +69,7 @@ func (spi *SPIDevice) Send(bytes_to_send []byte) []byte{
 		fmt.Println("Syscall successfull")
 	}
 	fmt.Printf("read %d bytes:\n", len(rBuffer))
-	return rBuffer
+	return []byte(rBuffer)
 }
 
 type SpiIOcTransfer struct{
