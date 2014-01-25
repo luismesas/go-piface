@@ -35,6 +35,8 @@ func NewSPIDevice(bus int, chipSelect int) *SPIDevice{
 
 // Opens SPI device
 func (spi *SPIDevice) Open(spi_device string) error{
+	fmt.Println("SPI Open")
+	
 	var err error
 	// spi.fd, err = os.OpenFile(spi_device, os.O_RDWR|os.O_SYNC, 0)
 	spi.file, err = os.Create(spi_device)

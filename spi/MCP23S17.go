@@ -1,5 +1,9 @@
 package spi
 
+import (
+	"fmt"
+)
+
 //	Microchip's MCP23S17: A 16-Bit I/O Expander with Serial Interface.
 type MCP23S17 struct{
 	Device *SPIDevice
@@ -76,6 +80,8 @@ func NewMCP23S17(hardwareAddress byte, bus int, chip_select int) *MCP23S17{
    	mcp.OLATa = NewMCP23S17Register(OLATA, mcp)
    	mcp.OLATb = NewMCP23S17Register(OLATB, mcp)
 
+   	mcp.Open()
+
 	return mcp
 }
 
@@ -85,11 +91,8 @@ const (
 	MCP23S17_SPEED = 10000000
 )
 
-func (mcp *MCP23S17) Open(spi_device string) error{
-	err := mcp.Device.Open(spi_device)
-	if err != nil {
-		return err
-	}
+func (mcp *MCP23S17) Open() error{
+	fmt.Printl("MCP23S17 Open")
 
 	err = mcp.Device.SetMode(MCP23S17_MODE)
 	if err != nil {
