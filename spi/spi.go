@@ -4,8 +4,7 @@ import (
 	"fmt"
 	"os"
 	"unsafe"
-	// "syscall"
-	"time"
+	"syscall"
 )
 
 const SPIDEV = "/dev/spidev"
@@ -34,22 +33,11 @@ func NewSPIDevice(bus int, chipSelect int) *SPIDevice{
 // Opens SPI device
 func (spi *SPIDevice) Open(spi_device string) error{
 	var err error
-	spi.fd, err = os.OpenFile(spi_device, os.O_RDWR|os.O_SYNC, 0)
+	// spi.fd, err = os.OpenFile(spi_device, os.O_RDWR|os.O_SYNC, 0)
+	spi.fd, err = os.OpenFile(spi_device, os.O_RDWR, 0)
 	if err != nil {
 		return fmt.Errorf("I can't see %s. Have you enabled the SPI module? (%s)", spi_device, SPI_HELP_LINK)
 	}
-
-	//watchs for spi messages
-	go func(){
-		for{
-			r := make([]byte,1)
-			spi.fd.Read(r)
-			if r[0] != 0 {
-				fmt.Printf("%q",r[0])
-			}
-			time.Sleep(time.Millisecond)			
-		}
-	}()
 	return nil
 }
 
@@ -64,16 +52,6 @@ func (spi *SPIDevice) Close() error{
 
 // Sends bytes over SPI channel and returns []byte response
 func (spi *SPIDevice) Send(bytes_to_send []byte) []byte{
-	n, err := spi.fd.Write(bytes_to_send)
-	if err != nil {
-		fmt.Printf("Error writting: %s\n", err)
-	} else {
-		fmt.Printf("Sent %d bytes: %q\n", n, bytes_to_send)
-	}
-	time.Sleep(time.Second)
-
-	return make([]byte, len(bytes_to_send))
-	/*
 	wBuffer := bytes_to_send
 	rBuffer := make([]byte, len(bytes_to_send))
 
@@ -89,7 +67,6 @@ func (spi *SPIDevice) Send(bytes_to_send []byte) []byte{
 	}
 	fmt.Printf("read %d bytes: %q\n", len(bytes_to_send), rBuffer)
 	return rBuffer
-	*/
 }
 
 type SpiIOcTransfer struct{
