@@ -1,7 +1,7 @@
 package spi
 
 import (
-	"fmt"
+	"log"
 )
 
 //	Microchip's MCP23S17: A 16-Bit I/O Expander with Serial Interface.
@@ -92,7 +92,7 @@ const (
 )
 
 func (mcp *MCP23S17) Open() error{
-	fmt.Println("MCP23S17 Open")
+	log.Println("MCP23S17 Open")
 
 	err := mcp.Device.SetMode(MCP23S17_MODE)
 	if err != nil {
@@ -139,13 +139,21 @@ func (mcp *MCP23S17) getSPIControlByte(read_write_cmd byte) byte {
 // Returns the value of the address specified.
 func (mcp *MCP23S17) Read(address byte) byte{
 	ctrl_byte := mcp.getSPIControlByte(READ_CMD)
-	return mcp.Device.Send([]byte{ctrl_byte, address, 0})[2]
+	data, err := mcp.Device.Send([]byte{ctrl_byte, address, 0})
+	if err != nil {
+		log.Fatalf("Error when writing on MCP23S17: %s\n", err)
+		return 0x00
+	}
+	return data[2]
 }
 
 // Writes data to the address specified.
 func (mcp *MCP23S17) Write(data byte, address byte){
 	ctrl_byte := mcp.getSPIControlByte(WRITE_CMD)
-	mcp.Device.Send([]byte{ctrl_byte, address, data})
+	_, err := mcp.Device.Send([]byte{ctrl_byte, address, data})
+	if err != nil {
+		log.Fatalf("Error when writing on MCP23S17: %s\n", err)
+	}
 }
 
 // Returns the bit specified from the address.

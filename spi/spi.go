@@ -1,6 +1,7 @@
 package spi
 
 import (
+	"log"
 	"fmt"
 	"os"
 	"unsafe"
@@ -35,8 +36,8 @@ func NewSPIDevice(bus int, chipSelect int) *SPIDevice{
 
 // Opens SPI device
 func (spi *SPIDevice) Open(spi_device string) error{
-	fmt.Println("SPI Open")
-	
+	log.Println("SPI Open")
+
 	var err error
 	// spi.fd, err = os.OpenFile(spi_device, os.O_RDWR|os.O_SYNC, 0)
 	spi.file, err = os.Create(spi_device)
@@ -56,7 +57,7 @@ func (spi *SPIDevice) Close() error{
 }
 
 // Sends bytes over SPI channel and returns []byte response
-func (spi *SPIDevice) Send(bytes_to_send []byte) []byte{
+func (spi *SPIDevice) Send(bytes_to_send []byte) ([]byte, error){
 	wBuffer := bytes_to_send
 	var rBuffer []byte
 	rBuffer = make([]byte,len(bytes_to_send))
@@ -69,12 +70,12 @@ func (spi *SPIDevice) Send(bytes_to_send []byte) []byte{
 	transfer.bitsPerWord = spi.bpw
 	transfer.speedHz = spi.speed
 
-	fmt.Printf("sent %d bytes: %q\n", len(bytes_to_send), wBuffer)
+	log.Printf("sent %d bytes: %q\n", len(bytes_to_send), wBuffer)
 	err := IOCTL(spi.file.Fd(), SPI_IOC_MESSAGE(1), uintptr(unsafe.Pointer(&transfer)))
 	if err != nil {
-		fmt.Printf("Error on sending: %s\n", err)
+		return nil, fmt.Errorf("Error on sending: %s\n", err)
 	}
-	return rBuffer
+	return rBuffer, nil
 }
 
 func (spi *SPIDevice) SetMode(mode uint8) error{
