@@ -52,7 +52,7 @@ func (spi *SPIDevice) Close() error{
 
 // Sends bytes over SPI channel and returns []byte response
 func (spi *SPIDevice) Send(bytes_to_send []byte) []byte{
-	wBuffer := bytes_to_send
+	wBuffer := make([]byte, len(bytes_to_send))
 	rBuffer := make([]byte, len(bytes_to_send))
 
 	transfer := SpiIOcTransfer{}
@@ -67,7 +67,7 @@ func (spi *SPIDevice) Send(bytes_to_send []byte) []byte{
 	} else {
 		fmt.Println("Syscall successfull")
 	}
-	fmt.Printf("read %d bytes: %q\n", len(rBuffer), rBuffer)
+	fmt.Printf("read %d bytes:\n", len(rBuffer))
 	return rBuffer
 }
 
