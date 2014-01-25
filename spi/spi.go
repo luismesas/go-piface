@@ -65,7 +65,7 @@ func (spi *SPIDevice) Send(bytes_to_send []byte) []byte{
 	fmt.Printf("sent %d bytes: %q\n", len(bytes_to_send), wBuffer)
 	_,_,ep := syscall.Syscall(syscall.SYS_IOCTL, spi.fd.Fd(), uintptr(unsafe.Pointer(&msg)), uintptr(unsafe.Pointer(&transfer)))
 	if ep != 0 {
-		fmt.Printf("Error on syscall: %s", Errno(ep))
+		fmt.Printf("Error on syscall: %s", syscall.Errno(ep))
 	}
 	fmt.Printf("read %d bytes: %q\n", len(bytes_to_send), rBuffer)
 	return rBuffer
