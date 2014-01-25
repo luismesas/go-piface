@@ -141,7 +141,7 @@ func (mcp *MCP23S17) Read(address byte) byte{
 	ctrl_byte := mcp.getSPIControlByte(READ_CMD)
 	data, err := mcp.Device.Send([]byte{ctrl_byte, address, 0})
 	if err != nil {
-		log.Fatalf("Error when writing on MCP23S17: %s\n", err)
+		log.Fatalf("Error when reading from MCP23S17: %s\n", err)
 		return 0x00
 	}
 	return data[2]
