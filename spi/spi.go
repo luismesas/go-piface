@@ -60,36 +60,13 @@ func (spi *SPIDevice) Send(bytes_to_send []byte) []byte{
 	transfer.rxBuf = uintptr(unsafe.Pointer(&rBuffer))
 	transfer.length = uint32(len(bytes_to_send))
 
-	msg := SpiIOcMessage(1)
-
 	fmt.Printf("sent %d bytes: %q\n", len(bytes_to_send), wBuffer)
-	_,_,ep := syscall.Syscall(syscall.SYS_IOCTL, spi.fd.Fd(), uintptr(unsafe.Pointer(&msg)), uintptr(unsafe.Pointer(&transfer)))
+	_,_,ep := syscall.Syscall(syscall.SYS_IOCTL, spi.fd.Fd(), SpiIOcMessage(1), uintptr(unsafe.Pointer(&transfer)))
 	if ep != 0 {
-		fmt.Printf("Error on syscall: %s", syscall.Errno(ep))
+		fmt.Printf("Error on syscall: %s\n", syscall.Errno(ep))
 	}
 	fmt.Printf("read %d bytes: %q\n", len(bytes_to_send), rBuffer)
 	return rBuffer
-	/*
-	//sends command
-	count, err := spi.fd.Write(bytes_to_send)
-	if err != nil {
-		log.Fatalf("Error sending bytes", err)
-	}
-	fmt.Printf("sent %d bytes: %q\n", count, bytes_to_send)
-
-	err = spi.fd.Sync()
-	if err != nil {
-		log.Fatalf("Error syncing bytes", err)
-	}
-
-	data := make([]byte, 100)
-	count, err = spi.fd.Read(data)
-	if err != nil {
-		log.Fatal(err)
-	}
-	fmt.Printf("read %d bytes: %q\n", count, data[:count])
-	return data
-	*/
 }
 
 type SpiIOcTransfer struct{
