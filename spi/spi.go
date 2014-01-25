@@ -57,6 +57,11 @@ func (spi *SPIDevice) Send(bytes_to_send []byte) []byte{
 	}
 	fmt.Printf("sent %d bytes: %q\n", count, bytes_to_send)
 
+	err = spi.fd.Sync()
+	if err != nil {
+		log.Fatalf("Error syncing bytes", err)
+	}
+
 	data := make([]byte, 100)
 	count, err = spi.fd.Read(data)
 	if err != nil {
