@@ -67,7 +67,6 @@ func (spi *SPIDevice) Send(bytes_to_send [3]byte) ([]byte, error){
 	transfer.bitsPerWord = spi.bpw
 	transfer.speedHz = spi.speed
 
-	log.Printf("sent %d bytes: %q\n", len(bytes_to_send), wBuffer)
 	err := IOCTL(spi.file.Fd(), SPI_IOC_MESSAGE(1), uintptr(unsafe.Pointer(&transfer)))
 	if err != nil {
 		return nil, fmt.Errorf("Error on sending: %s\n", err)
@@ -77,7 +76,6 @@ func (spi *SPIDevice) Send(bytes_to_send [3]byte) ([]byte, error){
 	for i := range(ret) {
 		ret[i] = rBuffer[i]
 	}
-	log.Printf("received %q", ret)
 
 	return ret, nil
 }
