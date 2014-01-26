@@ -74,15 +74,15 @@ func (pfd *PiFaceDigital) InitBoard() error{
 		spi.INTPOL_LOW)
 
 	pfd.mcp.IOCON.SetValue(ioconfig)
-	if pfd.mcp.IOCON.Value() != ioconfig {
-		return fmt.Errorf("No PiFace Digital board detected (hardware_addr=%d, bus=%b, chip_select=%b).", pfd.mcp.HardwareAddress, pfd.mcp.Device.Bus, pfd.mcp.Device.Chip)
-	} else {
-		pfd.mcp.GPIOa.SetValue(0)
-		pfd.mcp.IODIRa.SetValue(0) // GPIOA as outputs
-		pfd.mcp.IODIRb.SetValue(0xFF) // GPIOB as inputs
-		pfd.mcp.GPPUb.SetValue(0xFF) // input pullups on
-		pfd.EnableInterrupts()
-	}
+	// if pfd.mcp.IOCON.Value() != ioconfig {
+	// 	return fmt.Errorf("No PiFace Digital board detected (hardware_addr=%d, bus=%b, chip_select=%b).", pfd.mcp.HardwareAddress, pfd.mcp.Device.Bus, pfd.mcp.Device.Chip)
+	// }
+
+	pfd.mcp.GPIOa.SetValue(0)
+	pfd.mcp.IODIRa.SetValue(0) // GPIOA as outputs
+	pfd.mcp.IODIRb.SetValue(0xFF) // GPIOB as inputs
+	pfd.mcp.GPPUb.SetValue(0xFF) // input pullups on
+	// pfd.EnableInterrupts()
 
 	return nil
 }

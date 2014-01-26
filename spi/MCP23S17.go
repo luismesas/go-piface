@@ -53,7 +53,7 @@ type MCP23S17 struct{
 	OLATb *MCP23S17Register
 }
 
-func NewMCP23S17(hardwareAddress byte, bus int, chip_select int) *MCP23S17{
+func NewMCP23S17(hardwareAddress uint8, bus int, chip_select int) *MCP23S17{
 	mcp := new(MCP23S17)
 	mcp.Device = NewSPIDevice(bus, chip_select)
 	mcp.HardwareAddress = hardwareAddress
@@ -130,8 +130,8 @@ func (mcp *MCP23S17) Close() error{
 
 // :param read_write_cmd: Read or write command.
 // :type read_write_cmd: int	
-func (mcp *MCP23S17) getSPIControlByte(read_write_cmd byte) byte {
-	board_addr_pattern := (mcp.HardwareAddress << 0x01) & 0xE
+func (mcp *MCP23S17) getSPIControlByte(read_write_cmd uint8) byte {
+	board_addr_pattern := (mcp.HardwareAddress << 1) & 0xE
 	rw_cmd_pattern := read_write_cmd & 0x01  // make sure it's just 1 bit long
 	return 0x40 | board_addr_pattern | rw_cmd_pattern
 }
