@@ -2,19 +2,21 @@ package main
 
 import (
 	"fmt"
-	"github.com/luismesas/go-piface/pifacedigital"
-	"github.com/luismesas/go-piface/spi"
+	"github.com/luismesas/go-piface"
+	"github.com/luismesas/go-rpi/spi"
 	"time"
 )
 
 func main(){
-	pfd := pifacedigital.NewPiFaceDigital(spi.DEFAULT_HARDWARE_ADDR, spi.DEFAULT_BUS, spi.DEFAULT_CHIP)
+	pfd := piface.NewPiFaceDigital(spi.DEFAULT_HARDWARE_ADDR, spi.DEFAULT_BUS, spi.DEFAULT_CHIP)
 	
 	err := pfd.InitBoard()
 	if err != nil {
 		fmt.Printf("Error on init board: %s", err)
 		return
 	}
+
+	fmt.Println("Blinking led 7 each second")
 
 	for{
 		pfd.Leds[7].Toggle()
