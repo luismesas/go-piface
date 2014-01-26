@@ -14,8 +14,7 @@ const SPI_DELAY = 0
 type SPIDevice struct{
 	Bus int // 0
 	Chip int // 0
-	file  *os.File // nil 
-	spi_device string
+	file *os.File // nil
 
 	mode uint8
 	bpw uint8
@@ -28,21 +27,19 @@ func NewSPIDevice(bus int, chipSelect int) *SPIDevice{
 	spi.Bus = bus
 	spi.Chip = chipSelect
 
-	spiDevice := fmt.Sprintf("%s%d.%d", SPIDEV, spi.Bus, spi.Chip)
-	spi.Open(spiDevice)
-
 	return spi
 }
 
 // Opens SPI device
-func (spi *SPIDevice) Open(spi_device string) error{
+func (spi *SPIDevice) Open() error{
+	spiDevice := fmt.Sprintf("%s%d.%d", SPIDEV, spi.Bus, spi.Chip)
 	log.Println("SPI Open")
 
 	var err error
-	// spi.fd, err = os.OpenFile(spi_device, os.O_RDWR|os.O_SYNC, 0)
-	spi.file, err = os.Create(spi_device)
+	spi.file, err = os.OpenFile(spiDevice, os.O_RDWR, 0)
+	// spi.file, err = os.Create(spiDevice)
 	if err != nil {
-		return fmt.Errorf("I can't see %s. Have you enabled the SPI module? (%s)", spi_device, SPI_HELP_LINK)
+		return fmt.Errorf("I can't see %s. Have you enabled the SPI module? (%s)", spiDevice, SPI_HELP_LINK)
 	}
 	return nil
 }

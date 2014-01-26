@@ -20,7 +20,7 @@ type PiFaceDigital struct{
 	Switches []*spi.MCP23S17RegisterBit
 }
 
-func NewPiFaceDigital(hardware_addr byte, bus int, chip_select int, init bool) *PiFaceDigital{
+func NewPiFaceDigital(hardware_addr byte, bus int, chip_select int) *PiFaceDigital{
 	pfd := new(PiFaceDigital)
 	pfd.mcp = spi.NewMCP23S17(hardware_addr, bus, chip_select)
 	// pfd.device = interrupts.NewGPIOInterruptDevice()
@@ -54,14 +54,15 @@ func NewPiFaceDigital(hardware_addr byte, bus int, chip_select int, init bool) *
 		pfd.Switches[i] = spi.NewMCP23S17RegisterBit(uint(i), spi.GPIOA, pfd.mcp)
 	}
 
-	if init {
-		pfd.InitBoard()
-	}
-
 	return pfd
 }
 
 func (pfd *PiFaceDigital) InitBoard() error{
+
+	err := pfd.mcp.Open()
+	if err != nil {
+		return err
+	}
 
 	var ioconfig byte
 	ioconfig = (
@@ -74,9 +75,9 @@ func (pfd *PiFaceDigital) InitBoard() error{
 		spi.INTPOL_LOW)
 
 	pfd.mcp.IOCON.SetValue(ioconfig)
-	// if pfd.mcp.IOCON.Value() != ioconfig {
-	// 	return fmt.Errorf("No PiFace Digital board detected (hardware_addr=%d, bus=%b, chip_select=%b).", pfd.mcp.HardwareAddress, pfd.mcp.Device.Bus, pfd.mcp.Device.Chip)
-	// }
+	if pfd.mcp.IOCON.Value() != ioconfig {
+		return fmt.Errorf("No PiFace Digital board detected (hardware_addr=%d, bus=%b, chip_select=%b).", pfd.mcp.HardwareAddress, pfd.mcp.Device.Bus, pfd.mcp.Device.Chip)
+	}
 
 	pfd.mcp.GPIOa.SetValue(0)
 	pfd.mcp.IODIRa.SetValue(0) // GPIOA as outputs

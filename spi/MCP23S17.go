@@ -58,29 +58,27 @@ func NewMCP23S17(hardwareAddress uint8, bus int, chip_select int) *MCP23S17{
 	mcp.Device = NewSPIDevice(bus, chip_select)
 	mcp.HardwareAddress = hardwareAddress
 
-   	mcp.IODIRa = NewMCP23S17Register(IODIRA, mcp)
-   	mcp.IODIRb = NewMCP23S17Register(IODIRB, mcp)
-   	mcp.IPOLa = NewMCP23S17Register(IPOLA, mcp)
-   	mcp.IPOLb = NewMCP23S17Register(IPOLB, mcp)
-   	mcp.GPINTENa = NewMCP23S17Register(GPINTENA, mcp)
-   	mcp.GPINTENb = NewMCP23S17Register(GPINTENB, mcp)
-   	mcp.DEFVALa = NewMCP23S17Register(DEFVALA, mcp)
-   	mcp.DEFVALb = NewMCP23S17Register(DEFVALB, mcp)
-   	mcp.INTCONa = NewMCP23S17Register(INTCONA, mcp)
-   	mcp.INTCONb = NewMCP23S17Register(INTCONB, mcp)
-   	mcp.IOCON = NewMCP23S17Register(IOCON, mcp)
-   	mcp.GPPUa = NewMCP23S17Register(GPPUA, mcp)
-   	mcp.GPPUb = NewMCP23S17Register(GPPUB, mcp)
-   	mcp.INTFa = NewMCP23S17Register(INTFA, mcp)
-   	mcp.INTFb = NewMCP23S17Register(INTFB, mcp)
-   	mcp.INTCAPa = NewMCP23S17Register(INTCAPA, mcp)
-   	mcp.INTCAPb = NewMCP23S17Register(INTCAPB, mcp)
-   	mcp.GPIOa = NewMCP23S17Register(GPIOA, mcp)
-   	mcp.GPIOb = NewMCP23S17Register(GPIOB, mcp)
-   	mcp.OLATa = NewMCP23S17Register(OLATA, mcp)
-   	mcp.OLATb = NewMCP23S17Register(OLATB, mcp)
-
-   	mcp.Open()
+	mcp.IODIRa = NewMCP23S17Register(IODIRA, mcp)
+	mcp.IODIRb = NewMCP23S17Register(IODIRB, mcp)
+	mcp.IPOLa = NewMCP23S17Register(IPOLA, mcp)
+	mcp.IPOLb = NewMCP23S17Register(IPOLB, mcp)
+	mcp.GPINTENa = NewMCP23S17Register(GPINTENA, mcp)
+	mcp.GPINTENb = NewMCP23S17Register(GPINTENB, mcp)
+	mcp.DEFVALa = NewMCP23S17Register(DEFVALA, mcp)
+	mcp.DEFVALb = NewMCP23S17Register(DEFVALB, mcp)
+	mcp.INTCONa = NewMCP23S17Register(INTCONA, mcp)
+	mcp.INTCONb = NewMCP23S17Register(INTCONB, mcp)
+	mcp.IOCON = NewMCP23S17Register(IOCON, mcp)
+	mcp.GPPUa = NewMCP23S17Register(GPPUA, mcp)
+	mcp.GPPUb = NewMCP23S17Register(GPPUB, mcp)
+	mcp.INTFa = NewMCP23S17Register(INTFA, mcp)
+	mcp.INTFb = NewMCP23S17Register(INTFB, mcp)
+	mcp.INTCAPa = NewMCP23S17Register(INTCAPA, mcp)
+	mcp.INTCAPb = NewMCP23S17Register(INTCAPB, mcp)
+	mcp.GPIOa = NewMCP23S17Register(GPIOA, mcp)
+	mcp.GPIOb = NewMCP23S17Register(GPIOB, mcp)
+	mcp.OLATa = NewMCP23S17Register(OLATA, mcp)
+	mcp.OLATb = NewMCP23S17Register(OLATB, mcp)
 
 	return mcp
 }
@@ -94,7 +92,12 @@ const (
 func (mcp *MCP23S17) Open() error{
 	log.Println("MCP23S17 Open")
 
-	err := mcp.Device.SetMode(MCP23S17_MODE)
+	err := mcp.Device.Open()
+	if err != nil {
+		return err
+	}
+
+	err = mcp.Device.SetMode(MCP23S17_MODE)
 	if err != nil {
 		return err
 	}
