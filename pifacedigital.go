@@ -49,7 +49,7 @@ func NewPiFaceDigital(hardware_addr byte, bus int, chip_select int) *PiFaceDigit
 
 	pfd.Switches = make([]*MCP23S17.MCP23S17RegisterBit,4)
 	for i := range(pfd.Switches){
-		pfd.Switches[i] = MCP23S17.NewMCP23S17RegisterBit(uint(i), MCP23S17.GPIOA, pfd.mcp)
+		pfd.Switches[i] = MCP23S17.NewMCP23S17RegisterBit(uint(i), MCP23S17.GPIOB, pfd.mcp)
 	}
 
 	return pfd
