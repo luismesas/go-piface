@@ -67,7 +67,7 @@ func (spi *SPIDevice) Send(bytes_to_send []byte) ([]byte, error){
 	transfer := SPI_IOC_TRANSFER{}
 	transfer.txBuf = uint64( uintptr( unsafe.Pointer(&wBuffer)))
 	transfer.rxBuf = uint64( uintptr( unsafe.Pointer(&rBuffer)))
-	transfer.length = uint32(unsafe.Sizeof(wBuffer))
+	transfer.length = uint32(3)
 	transfer.delayUsecs = SPI_DELAY
 	transfer.bitsPerWord = spi.bpw
 	transfer.speedHz = spi.speed

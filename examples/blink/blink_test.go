@@ -3,15 +3,17 @@ package main
 import (
 	"testing"
 	"unsafe"
-	"github.com/luismesas/go-piface/spi"
 )
 
 func TestSome(t *testing.T){
 	var b byte
 	t.Errorf("Size of byte is %d", unsafe.Sizeof(b))
-
-	t.Errorf("Size of SpiIOcTransfer is %d", unsafe.Sizeof(spi.SpiIOcTransfer{}))
-
-	t.Errorf("Value of SpiIOcMessage(1) is %d", spi.SpiIOcMessage(1))
-	t.Errorf("Value of SpiIOcMessage(2) is %d", spi.SpiIOcMessage(2))
+	var u8 uint8
+	t.Errorf("Size of uint8 is %d", unsafe.Sizeof(u8))
+	ba3 := []byte{0,0,0}
+	t.Errorf("Size of []byte{0,0,0} is %d", unsafe.Sizeof(ba3))
+	ba1 := []byte{0}
+	t.Errorf("Size of []byte{0} is %d", unsafe.Sizeof(ba1))
+	bam := make([]byte,3)
+	t.Errorf("Size of []byte{0,0,0} with make is %d", unsafe.Sizeof(bam))
 }
