@@ -144,7 +144,8 @@ func (mcp *MCP23S17) Read(address byte) byte{
 		log.Fatalf("Error when reading from MCP23S17: %s\n", err)
 		return 0x00
 	}
-	return data[2]
+	log.Printf("Data readed: %q", data)
+	return data[0]
 }
 
 // Writes data to the address specified.
