@@ -57,7 +57,7 @@ func (spi *SPIDevice) Close() error{
 // Sends bytes over SPI channel and returns []byte response
 func (spi *SPIDevice) Send(bytes_to_send [3]byte) ([]byte, error){
 	wBuffer := bytes_to_send
-	rBuffer := make([]byte,len(wBuffer))
+	rBuffer := [3]byte{}
 
 	transfer := SPI_IOC_TRANSFER{}
 	transfer.txBuf = uint64( uintptr( unsafe.Pointer(&wBuffer)))
