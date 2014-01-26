@@ -72,7 +72,13 @@ func (spi *SPIDevice) Send(bytes_to_send [3]byte) ([]byte, error){
 	if err != nil {
 		return nil, fmt.Errorf("Error on sending: %s\n", err)
 	}
-	return rBuffer, nil
+
+	ret := make([]byte, unsafe.Sizeof(rBuffer))
+	for i := range(ret) {
+		ret[i] = rBuffer[i]
+	}
+
+	return ret, nil
 }
 
 func (spi *SPIDevice) SetMode(mode uint8) error{
