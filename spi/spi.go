@@ -57,7 +57,7 @@ func (spi *SPIDevice) Close() error{
 // Sends bytes over SPI channel and returns []byte response
 func (spi *SPIDevice) Send(bytes_to_send []byte) ([]byte, error){
 	wBuffer := bytes_to_send
-	rBuffer := make([]byte, len(wBuffer))
+	rBuffer := make([]byte, unsafe.Sizeof(wBuffer))
 
 	log.Printf("Size of sent buffer is: %d", unsafe.Sizeof(wBuffer))
 	log.Printf("Len of sent buffer is: %d", len(wBuffer))
@@ -68,6 +68,7 @@ func (spi *SPIDevice) Send(bytes_to_send []byte) ([]byte, error){
 	transfer.txBuf = uint64( uintptr( unsafe.Pointer(&wBuffer)))
 	transfer.rxBuf = uint64( uintptr( unsafe.Pointer(&rBuffer)))
 	transfer.length = uint32(unsafe.Sizeof(wBuffer))
+	transfer.length = uint32(len(wBuffer))
 	transfer.delayUsecs = SPI_DELAY
 	transfer.bitsPerWord = spi.bpw
 	transfer.speedHz = spi.speed
