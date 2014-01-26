@@ -166,20 +166,18 @@ func (mcp *MCP23S17) Write(data byte, address byte){
 // Returns the bit specified from the address.
 func (mcp *MCP23S17) ReadBit(bit_num uint, address byte) byte{
 	value := mcp.Read(address)
-	bit_mask := GetBitMask(bit_num)
-	if value & bit_mask > 0 {
-		return 1
-	} else {
-		return 0
-	}
+	return (value >> bit_num) & 1
 }
 
 // Writes the value given to the bit in the address specified.
-func (mcp *MCP23S17) WriteBit(value byte, bit_num uint, address byte){
-	bit_mask := GetBitMask(bit_num)
-	old_byte := mcp.Read(address)
-	newbyte := old_byte | bit_mask
-	mcp.Write(newbyte, address)
+func (mcp *MCP23S17) WriteBit(data byte, bit_num uint, address byte){
+	value := mcp.Read(address)
+	if data > 0 {
+		value = value | (1 << bit_num) //set
+	} else {
+		value = value & ( 0xff ^ (1 << bit_num)) //clear
+	}
+	mcp.Write(value, address)
 }
 
 // Clears the interrupt flags by reading the capture register.
