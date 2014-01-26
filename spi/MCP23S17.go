@@ -90,7 +90,6 @@ const (
 )
 
 func (mcp *MCP23S17) Open() error{
-	log.Println("MCP23S17 Open")
 
 	err := mcp.Device.Open()
 	if err != nil {
@@ -112,6 +111,7 @@ func (mcp *MCP23S17) Open() error{
 		return err
 	}
 
+	log.Println("MCP23S17 Open")
 	return nil
 }
 

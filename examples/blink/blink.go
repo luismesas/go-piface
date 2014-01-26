@@ -8,7 +8,7 @@ import (
 )
 
 func main(){
-	pfd := pifacedigital.NewPiFaceDigital(spi.DEFAULT_HARDWARE_ADDR, spi.DEFAULT_BUS, spi.DEFAULT_CHIP, false)
+	pfd := pifacedigital.NewPiFaceDigital(spi.DEFAULT_HARDWARE_ADDR, spi.DEFAULT_BUS, spi.DEFAULT_CHIP)
 	
 	err := pfd.InitBoard()
 	if err != nil {

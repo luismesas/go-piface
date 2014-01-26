@@ -33,7 +33,6 @@ func NewSPIDevice(bus int, chipSelect int) *SPIDevice{
 // Opens SPI device
 func (spi *SPIDevice) Open() error{
 	spiDevice := fmt.Sprintf("%s%d.%d", SPIDEV, spi.Bus, spi.Chip)
-	log.Println("SPI Open")
 
 	var err error
 	spi.file, err = os.OpenFile(spiDevice, os.O_RDWR, 0)
@@ -41,6 +40,8 @@ func (spi *SPIDevice) Open() error{
 	if err != nil {
 		return fmt.Errorf("I can't see %s. Have you enabled the SPI module? (%s)", spiDevice, SPI_HELP_LINK)
 	}
+
+	log.Println("SPI Open")
 	return nil
 }
 
@@ -59,7 +60,9 @@ func (spi *SPIDevice) Send(bytes_to_send []byte) ([]byte, error){
 	rBuffer := make([]byte, len(wBuffer))
 
 	log.Printf("Size of sent buffer is: %d", unsafe.Sizeof(wBuffer))
+	log.Printf("Len of sent buffer is: %d", len(wBuffer))
 	log.Printf("Size of receive buffer is: %d", unsafe.Sizeof(rBuffer))
+	log.Printf("Len of receive buffer is: %d", len(rBuffer))
 
 	transfer := SPI_IOC_TRANSFER{}
 	transfer.txBuf = uint64( uintptr( unsafe.Pointer(&wBuffer)))
