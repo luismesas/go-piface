@@ -145,7 +145,11 @@ func (mcp *MCP23S17) Read(address byte) byte{
 		return 0x00
 	}
 	log.Printf("Data readed: %q", data)
-	return data[0]
+	if len(data) == 0 {
+		return 0x00
+	} else {
+		return data[0]
+	}
 }
 
 // Writes data to the address specified.
