@@ -142,7 +142,7 @@ func (mcp *MCP23S17) getSPIControlByte(read_write_cmd uint8) byte {
 // Returns the value of the address specified.
 func (mcp *MCP23S17) Read(address byte) byte{
 	ctrl_byte := mcp.getSPIControlByte(READ_CMD)
-	data, err := mcp.Device.Send([]byte{ctrl_byte, address, 0})
+	data, err := mcp.Device.Send([3]byte{ctrl_byte, address, 0})
 	if err != nil {
 		log.Fatalf("Error when reading from MCP23S17: %s\n", err)
 		return 0x00
@@ -158,7 +158,7 @@ func (mcp *MCP23S17) Read(address byte) byte{
 // Writes data to the address specified.
 func (mcp *MCP23S17) Write(data byte, address byte){
 	ctrl_byte := mcp.getSPIControlByte(WRITE_CMD)
-	_, err := mcp.Device.Send([]byte{ctrl_byte, address, data})
+	_, err := mcp.Device.Send([3]byte{ctrl_byte, address, data})
 	if err != nil {
 		log.Fatalf("Error when writing on MCP23S17: %s\n", err)
 	}
