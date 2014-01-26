@@ -151,7 +151,7 @@ func (mcp *MCP23S17) Read(address byte) byte{
 	if len(data) == 0 {
 		return 0x00
 	} else {
-		return data[0]
+		return data[2]
 	}
 }
 
