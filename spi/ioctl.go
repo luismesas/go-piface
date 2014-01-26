@@ -121,7 +121,8 @@ func SPI_IOC_WR_MAX_SPEED_HZ() uintptr {
 
 
 func SPI_IOC_MESSAGE(n uintptr) uintptr{
-	return IOW(SPI_IOC_MAGIC, 0 , uintptr(SPI_MESSAGE_SIZE(n)))
+	bytes := make([]byte,SPI_MESSAGE_SIZE(n))
+	return IOW(SPI_IOC_MAGIC, 0 , uintptr(unsafe.Pointer(&bytes)))
 }
 
 func SPI_MESSAGE_SIZE(n uintptr) uintptr{
