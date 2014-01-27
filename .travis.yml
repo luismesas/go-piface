@@ -1,1 +1,4 @@
-.travis.yml
+language: go
+
+go:
+  - 1.2
