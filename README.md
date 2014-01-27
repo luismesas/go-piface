@@ -3,6 +3,7 @@ go-piface
 
 Go library to interact with raspberry piface
 
+[![Build Status](https://travis-ci.org/luismesas/go-piface.png)](https://travis-ci.org/luismesas/go-piface)
 
 current features
 ----------------
